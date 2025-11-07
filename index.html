@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Tahfizh Report</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-pattern">
+  <div class="login-container">
+    <h1 class="title">📖 Laporan Hafalan Tahfizh</h1>
+    <p class="subtitle">Silakan login untuk melanjutkan</p>
+
+    <div class="login-card">
+      <select id="role" class="input">
+        <option value="guru">Guru</option>
+        <option value="ortu">Orang Tua</option>
+      </select>
+      <input type="text" id="username" placeholder="Username" class="input">
+      <input type="password" id="password" placeholder="Password" class="input">
+      <button onclick="login()" class="btn">Masuk</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
