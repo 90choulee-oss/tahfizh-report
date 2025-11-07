@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Amiri&family=Poppins:wght@400;600&display=swap');
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f8f9f5;
+  color: #2e7d32;
+  margin: 0;
+  padding: 0;
+}
+
+/* Background pattern lembut */
+.bg-pattern {
+  background: linear-gradient(135deg, #f3f8f5 25%, #e8f5e9 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Login */
+.login-container {
+  text-align: center;
+  padding: 2rem;
+}
+
+.title {
+  font-family: 'Amiri', serif;
+  color: #2e7d32;
+  font-size: 1.8rem;
+}
+
+.subtitle {
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.login-card {
+  background: white;
+  border: 2px solid #d4af37;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  padding: 2rem;
+  display: inline-block;
+  width: 90%;
+  max-width: 320px;
+}
+
+.input {
+  width: 100%;
+  padding: 0.7rem;
+  margin: 0.5rem 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.btn {
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #1b5e20;
+}
+
+.btn-small {
+  background: #d4af37;
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.navbar {
+  background: #2e7d32;
+  color: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.content {
+  padding: 1rem;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.data-table th, .data-table td {
+  border: 1px solid #e0e0e0;
+  padding: 0.8rem;
+  text-align: center;
+}
+
+.data-table th {
+  background: #d4af37;
+  color: white;
+}
+
+.card {
+  background: white;
+  border-left: 5px solid #2e7d32;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-top: 1rem;
+}
+
+.progress-bar {
+  background: #eee;
+  border-radius: 8px;
+  height: 15px;
+  width: 100%;
+  margin: 0.5rem 0;
+}
+
+.progress {
+  background: linear-gradient(90deg, #2e7d32, #d4af37);
+  height: 100%;
+  border-radius: 8px;
+}
