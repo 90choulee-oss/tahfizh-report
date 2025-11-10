@@ -74,4 +74,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   renderTable();
 });
+function openPopup() {
+  document.getElementById('popupForm').style.display = 'flex';
+}
+
+function closePopup() {
+  document.getElementById('popupForm').style.display = 'none';
+}
+
+function logout() {
+  window.location.href = "index.html";
+}
 
