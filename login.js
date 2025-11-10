@@ -1,33 +1,34 @@
-// === LOGIN.JS ===
-// Script login sederhana untuk Tahfizh Report
-
 function login() {
   const username = document.getElementById("username").value.trim().toLowerCase();
   const password = document.getElementById("password").value.trim();
 
-  // Daftar akun guru (bisa ditambah)
+  // Daftar akun guru
   const guruAccounts = ["guru", "ustadz", "ustadzah"];
   const passwordGuru = "123";
 
-  // Validasi login guru
+  // Login guru
   if (guruAccounts.includes(username) && password === passwordGuru) {
     localStorage.setItem("userLogin", username);
     localStorage.setItem("role", "guru");
-    window.location.href = "guru.html";
+    // beri sedikit jeda agar localStorage tersimpan
+    setTimeout(() => {
+      window.location.href = "guru.html";
+    }, 200);
     return;
   }
 
-  // Login orang tua / santri (contoh data sementara)
-  const santriAccounts = ["ahmad", "zahra", "hanin", "faiz"]; // tambahkan nama santri sesuai data
+  // Login ortu
+  const santriAccounts = ["ahmad", "zahra", "hanin", "faiz"];
   const passwordSantri = "123";
 
   if (santriAccounts.includes(username) && password === passwordSantri) {
     localStorage.setItem("userLogin", username);
     localStorage.setItem("role", "ortu");
-    window.location.href = "ortu.html";
+    setTimeout(() => {
+      window.location.href = "ortu.html";
+    }, 200);
     return;
   }
 
-  // Jika tidak cocok
   alert("❌ Username atau password salah!");
 }
