@@ -7,52 +7,90 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="navbar">
-    <h2>👩‍🏫 Dashboard Guru</h2>
-    <button onclick="logout()" class="btn-small">Keluar</button>
-  </header>
+  <div class="sidebar">
+    <div class="logo">
+      <img src="https://img.icons8.com/color/48/000000/mosque.png" alt="logo">
+      <h2>report<br>tahfizh</h2>
+    </div>
+    <nav>
+      <button class="menu-btn active" onclick="showSection('dashboard')">📊 Dasbor</button>
+      <button class="menu-btn" onclick="openPopup()">✍️ Input/Update</button>
+      <button class="menu-btn" onclick="showSection('attendance')">🧾 Daftar Hadir</button>
+    </nav>
+  </div>
 
-  <div class="container">
-    <!-- Sidebar Input -->
-    <aside class="sidebar">
-      <h3>✍️ Input Hafalan</h3>
-      <form id="hafalanForm">
-        <label>Nama Santri:</label>
-        <input type="text" id="nama" required>
+  <div class="main-content">
+    <header class="topbar">
+      <input type="text" placeholder="🔍 Cari..." class="search-box">
+      <div class="user-actions">
+        <span>👤 Guru</span>
+        <button class="btn-small" onclick="logout()">Logout</button>
+      </div>
+    </header>
 
-        <label>Surah:</label>
-        <input type="text" id="surah" required>
-
-        <label>Ayat (contoh: 1–20):</label>
-        <input type="text" id="ayat" required>
-
-        <label>Progress (%):</label>
-        <input type="number" id="progress" min="0" max="100" required>
-
-        <label>Keterangan:</label>
-        <input type="text" id="keterangan" placeholder="Baik / Sangat Baik / dll">
-
-        <button type="submit" class="btn">💾 Simpan / Update</button>
-      </form>
-    </aside>
-
-    <!-- Konten utama -->
-    <main class="main-content">
-      <h3>📋 Data Hafalan Santri</h3>
-      <table class="data-table" id="dataTable">
+    <section id="dashboard" class="section active">
+      <h2>📋 Hasil Input Hafalan</h2>
+      <table class="data-table">
         <thead>
           <tr>
-            <th>Nama</th>
+            <th>Nama Santri</th>
             <th>Surah</th>
             <th>Ayat</th>
-            <th>Progress</th>
+            <th>Tanggal</th>
             <th>Keterangan</th>
-            <th>Aksi</th>
           </tr>
         </thead>
-        <tbody></tbody>
+        <tbody>
+          <tr>
+            <td>Ahmad Faiz</td>
+            <td>Al-Baqarah</td>
+            <td>1–20</td>
+            <td>1 Nov 2025</td>
+            <td>Sangat Baik</td>
+          </tr>
+          <tr>
+            <td>Zahra Hanin</td>
+            <td>Ali Imran</td>
+            <td>1–15</td>
+            <td>3 Nov 2025</td>
+            <td>Baik</td>
+          </tr>
+        </tbody>
       </table>
-    </main>
+    </section>
+
+    <section id="attendance" class="section">
+      <h2>🧾 Daftar Hadir</h2>
+      <p>Fitur daftar hadir masih dalam pengembangan.</p>
+    </section>
+  </div>
+
+  <!-- Popup Form -->
+  <div id="popupForm" class="popup">
+    <div class="popup-content">
+      <h3>✍️ Input/Update Hafalan</h3>
+      <form id="hafalanForm">
+        <label>Nama Santri</label>
+        <input type="text" required>
+
+        <label>Surah</label>
+        <input type="text" required>
+
+        <label>Ayat</label>
+        <input type="text" required>
+
+        <label>Tanggal</label>
+        <input type="date" required>
+
+        <label>Keterangan</label>
+        <textarea rows="3"></textarea>
+
+        <div class="popup-actions">
+          <button type="submit" class="btn-primary">Simpan</button>
+          <button type="button" class="btn-secondary" onclick="closePopup()">Batal</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <script src="script.js"></script>
