@@ -12,45 +12,48 @@
     <button onclick="logout()" class="btn-small">Keluar</button>
   </header>
 
-  <main class="content">
-    <h3>📋 Data Hafalan Santri</h3>
+  <div class="container">
+    <!-- Sidebar Input -->
+    <aside class="sidebar">
+      <h3>✍️ Input Hafalan</h3>
+      <form id="hafalanForm">
+        <label>Nama Santri:</label>
+        <input type="text" id="nama" required>
 
-    <!-- Form Input -->
-    <form id="hafalanForm" class="card">
-      <label>Nama Santri:</label>
-      <input type="text" id="nama" required>
+        <label>Surah:</label>
+        <input type="text" id="surah" required>
 
-      <label>Surah:</label>
-      <input type="text" id="surah" required>
+        <label>Ayat (contoh: 1–20):</label>
+        <input type="text" id="ayat" required>
 
-      <label>Ayat (contoh: 1–20):</label>
-      <input type="text" id="ayat" required>
+        <label>Progress (%):</label>
+        <input type="number" id="progress" min="0" max="100" required>
 
-      <label>Progress (%):</label>
-      <input type="number" id="progress" min="0" max="100" required>
+        <label>Keterangan:</label>
+        <input type="text" id="keterangan" placeholder="Baik / Sangat Baik / dll">
 
-      <label>Keterangan:</label>
-      <input type="text" id="keterangan" placeholder="Baik / Sangat Baik / dll">
+        <button type="submit" class="btn">💾 Simpan / Update</button>
+      </form>
+    </aside>
 
-      <button type="submit" class="btn">💾 Simpan / Update</button>
-    </form>
-
-    <!-- Tabel Data -->
-    <h3 style="margin-top:2rem;">📖 Data Tersimpan</h3>
-    <table class="data-table" id="dataTable">
-      <thead>
-        <tr>
-          <th>Nama</th>
-          <th>Surah</th>
-          <th>Ayat</th>
-          <th>Progress</th>
-          <th>Keterangan</th>
-          <th>Aksi</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </main>
+    <!-- Konten utama -->
+    <main class="main-content">
+      <h3>📋 Data Hafalan Santri</h3>
+      <table class="data-table" id="dataTable">
+        <thead>
+          <tr>
+            <th>Nama</th>
+            <th>Surah</th>
+            <th>Ayat</th>
+            <th>Progress</th>
+            <th>Keterangan</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </main>
+  </div>
 
   <script src="script.js"></script>
 </body>
