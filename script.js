@@ -1,123 +1,87 @@
-// === Popup Control ===
-function openPopup(editId = null) {
-  const popup = document.getElementById('popupForm');
-  popup.style.display = 'flex';
-  popup.setAttribute('data-edit-id', editId || '');
-}
+document.addEventListener("DOMContentLoaded", () => {
+  const btnInput = document.getElementById("btnInput");
+  const btnClosePopup = document.getElementById("closePopup");
+  const btnSimpan = document.getElementById("btnSimpan");
+  const popup = document.getElementById("popupInput");
+  const form = document.getElementById("formInput");
+  const tableBody = document.querySelector("#tabelHafalan tbody");
 
-function closePopup() {
-  document.getElementById('popupForm').style.display = 'none';
-  document.getElementById('hafalanForm').reset();
-  document.getElementById('popupForm').removeAttribute('data-edit-id');
-}
+  let editingIndex = null;
+  let dataHafalan = JSON.parse(localStorage.getItem("dataHafalan")) || [];
 
-// === Logout ===
-function logout() {
-  window.location.href = "index.html";
-}
+  function renderTable() {
+    tableBody.innerHTML = "";
+    dataHafalan.forEach((item, index) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${item.tanggal}</td>
+        <td>${item.surah}</td>
+        <td>${item.ayat}</td>
+        <td>${item.keterangan}</td>
+        <td>
+          <button class="btn-edit" data-index="${index}">✏️</button>
+          <button class="btn-hapus" data-index="${index}">🗑️</button>
+        </td>
+      `;
+      tableBody.appendChild(row);
+    });
 
-// === Ganti Section ===
-function showSection(id) {
-  const sections = document.querySelectorAll('.section');
-  sections.forEach(sec => sec.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+    // Hubungkan event tombol Edit dan Hapus
+    document.querySelectorAll(".btn-edit").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const idx = btn.getAttribute("data-index");
+        editingIndex = idx;
+        const data = dataHafalan[idx];
+        form.tanggal.value = data.tanggal;
+        form.surah.value = data.surah;
+        form.ayat.value = data.ayat;
+        form.keterangan.value = data.keterangan;
+        popup.classList.add("show");
+      });
+    });
 
-  const buttons = document.querySelectorAll('.menu-btn');
-  buttons.forEach(btn => btn.classList.remove('active'));
-  event.target.classList.add('active');
-}
+    document.querySelectorAll(".btn-hapus").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const idx = btn.getAttribute("data-index");
+        if (confirm("Yakin ingin menghapus data ini?")) {
+          dataHafalan.splice(idx, 1);
+          localStorage.setItem("dataHafalan", JSON.stringify(dataHafalan));
+          renderTable();
+        }
+      });
+    });
+  }
 
-// === LocalStorage Helpers ===
-function getData() {
-  return JSON.parse(localStorage.getItem('hafalanData')) || [];
-}
-
-function saveData(data) {
-  localStorage.setItem('hafalanData', JSON.stringify(data));
-}
-
-// === Load Tabel ===
-function loadTable() {
-  const tbody = document.querySelector('#dashboard tbody');
-  tbody.innerHTML = "";
-  const records = getData();
-
-  records.forEach(item => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>${item.nama}</td>
-      <td>${item.surah}</td>
-      <td>${item.ayat}</td>
-      <td>${item.tanggal}</td>
-      <td>${item.keterangan || '-'}</td>
-      <td>
-        <button class="btn-edit" onclick="editData('${item.id}')">✏️</button>
-        <button class="btn-delete" onclick="deleteData('${item.id}')">🗑️</button>
-      </td>
-    `;
-    tbody.appendChild(row);
+  // Tampilkan popup input baru
+  btnInput.addEventListener("click", () => {
+    editingIndex = null;
+    form.reset();
+    popup.classList.add("show");
   });
-}
 
-// === Simpan / Update Data ===
-document.getElementById('hafalanForm').addEventListener('submit', function(e) {
-  e.preventDefault();
+  // Tutup popup
+  btnClosePopup.addEventListener("click", () => popup.classList.remove("show"));
 
-  const inputs = this.querySelectorAll('input, textarea');
-  const nama = inputs[0].value.trim();
-  const surah = inputs[1].value.trim();
-  const ayat = inputs[2].value.trim();
-  const tanggal = inputs[3].value;
-  const keterangan = inputs[4].value.trim();
+  // Simpan data
+  btnSimpan.addEventListener("click", () => {
+    const newData = {
+      tanggal: form.tanggal.value,
+      surah: form.surah.value,
+      ayat: form.ayat.value,
+      keterangan: form.keterangan.value,
+    };
 
-  if (!nama || !surah || !ayat || !tanggal) {
-    alert("Mohon lengkapi semua data sebelum menyimpan!");
-    return;
-  }
+    if (editingIndex !== null) {
+      dataHafalan[editingIndex] = newData;
+    } else {
+      dataHafalan.push(newData);
+    }
 
-  let records = getData();
-  const editId = document.getElementById('popupForm').getAttribute('data-edit-id');
+    localStorage.setItem("dataHafalan", JSON.stringify(dataHafalan));
+    renderTable();
+    popup.classList.remove("show");
+    form.reset();
+  });
 
-  if (editId) {
-    // Update data lama
-    records = records.map(r => r.id === editId ? { ...r, nama, surah, ayat, tanggal, keterangan } : r);
-    alert("Data berhasil diperbarui!");
-  } else {
-    // Simpan data baru
-    const newData = { id: Date.now().toString(), nama, surah, ayat, tanggal, keterangan };
-    records.push(newData);
-    alert("Data hafalan berhasil disimpan!");
-  }
-
-  saveData(records);
-  loadTable();
-  closePopup();
+  renderTable();
 });
-
-// === Edit Data ===
-function editData(id) {
-  const records = getData();
-  const item = records.find(r => r.id === id);
-  if (!item) return;
-
-  const inputs = document.querySelectorAll('#hafalanForm input, #hafalanForm textarea');
-  inputs[0].value = item.nama;
-  inputs[1].value = item.surah;
-  inputs[2].value = item.ayat;
-  inputs[3].value = item.tanggal;
-  inputs[4].value = item.keterangan;
-
-  openPopup(id);
-}
-
-// === Hapus Data ===
-function deleteData(id) {
-  if (!confirm("Yakin ingin menghapus data ini?")) return;
-
-  const records = getData().filter(r => r.id !== id);
-  saveData(records);
-  loadTable();
-}
-
-// === Jalankan saat halaman dimuat ===
-window.addEventListener('load', loadTable);
