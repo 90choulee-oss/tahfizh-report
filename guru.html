@@ -8,46 +8,50 @@
 </head>
 <body>
   <header class="navbar">
-    <h2>📘 Dashboard Guru</h2>
+    <h2>👩‍🏫 Dashboard Guru</h2>
     <button onclick="logout()" class="btn-small">Keluar</button>
   </header>
 
   <main class="content">
-    <h3>Daftar Capaian Hafalan Santri</h3>
-    <table class="data-table">
+    <h3>📋 Data Hafalan Santri</h3>
+
+    <!-- Form Input -->
+    <form id="hafalanForm" class="card">
+      <label>Nama Santri:</label>
+      <input type="text" id="nama" required>
+
+      <label>Surah:</label>
+      <input type="text" id="surah" required>
+
+      <label>Ayat (contoh: 1–20):</label>
+      <input type="text" id="ayat" required>
+
+      <label>Progress (%):</label>
+      <input type="number" id="progress" min="0" max="100" required>
+
+      <label>Keterangan:</label>
+      <input type="text" id="keterangan" placeholder="Baik / Sangat Baik / dll">
+
+      <button type="submit" class="btn">💾 Simpan / Update</button>
+    </form>
+
+    <!-- Tabel Data -->
+    <h3 style="margin-top:2rem;">📖 Data Tersimpan</h3>
+    <table class="data-table" id="dataTable">
       <thead>
         <tr>
-          <th>Nama Santri</th>
+          <th>Nama</th>
           <th>Surah</th>
-          <th>Total Ayat</th>
-          <th>Hafal</th>
+          <th>Ayat</th>
           <th>Progress</th>
-          <th>Nilai</th>
           <th>Keterangan</th>
+          <th>Aksi</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td>Ahmad Faiz</td>
-          <td>Al-Baqarah</td>
-          <td>286</td>
-          <td>57</td>
-          <td>20%</td>
-          <td>4.7</td>
-          <td>Baik</td>
-        </tr>
-        <tr>
-          <td>Zahra Hanin</td>
-          <td>An-Nisa</td>
-          <td>176</td>
-          <td>58</td>
-          <td>33%</td>
-          <td>4.9</td>
-          <td>Sangat Baik</td>
-        </tr>
-      </tbody>
+      <tbody></tbody>
     </table>
   </main>
+
+  <script src="script.js"></script>
 </body>
-<script src="script.js"></script>
 </html>
