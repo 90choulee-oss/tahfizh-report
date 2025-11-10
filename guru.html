@@ -1,75 +1,216 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Guru | Tahfizh Report</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Guru | Hafalan Santri</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #007bff;
+      color: white;
+      padding: 15px 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      font-size: 1.3em;
+      margin: 0;
+    }
+
+    header button {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9em;
+    }
+
+    main {
+      padding: 25px;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .toolbar button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-size: 0.9em;
+      cursor: pointer;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      border-bottom: 1px solid #ddd;
+      padding: 10px 12px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #007bff;
+      color: white;
+      text-transform: uppercase;
+      font-size: 0.85em;
+    }
+
+    td button {
+      border: none;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .btn-edit {
+      background-color: #ffc107;
+    }
+
+    .btn-delete {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    /* === Popup Form === */
+    #popupForm {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    #popupForm.show {
+      display: flex;
+    }
+
+    .popup-content {
+      background: white;
+      padding: 20px 25px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      animation: fadeIn 0.2s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .popup-content h2 {
+      text-align: center;
+      margin-top: 0;
+      color: #007bff;
+    }
+
+    .popup-content input, 
+    .popup-content textarea {
+      width: 100%;
+      padding: 8px 10px;
+      margin: 8px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 0.9em;
+    }
+
+    .popup-buttons {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .popup-buttons button {
+      margin: 5px;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .btn-save {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .btn-cancel {
+      background-color: #6c757d;
+      color: white;
+    }
+  </style>
 </head>
 <body>
-  <div class="sidebar">
-    <div class="logo">
-      <img src="icon-mosque.png" alt="Logo" class="logo-icon">
-      <h2>REPORT<br><span>TAHFIZH</span></h2>
+  <header>
+    <h1 id="namaGuru">👋 Selamat datang, Ustadz/Ustadzah</h1>
+    <button id="btnLogout">Keluar</button>
+  </header>
+
+  <main>
+    <div class="toolbar">
+      <h2>📘 Data Hafalan Santri</h2>
+      <button id="btnInput">+ Input/Update Hafalan</button>
     </div>
 
-    <nav class="menu">
-      <button class="menu-btn active" id="btnDashboard">📊 Dasbor</button>
-      <button class="menu-btn" id="btnInput">✍️ Input/Update</button>
-      <button class="menu-btn" id="btnDaftarHadir">🧾 Daftar Hadir</button>
-    </nav>
-  </div>
+    <table id="tabelHafalan">
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Nama Santri</th>
+          <th>Surah</th>
+          <th>Ayat</th>
+          <th>Tanggal</th>
+          <th>Keterangan</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="7" style="text-align:center; color:#777;">Memuat data...</td></tr>
+      </tbody>
+    </table>
+  </main>
 
-  <div class="main-content">
-    <header class="navbar">
-      <input type="text" placeholder="Cari..." class="search-box">
-      <div class="user-info">
-        <span id="namaGuru">Guru</span>
-        <button onclick="logout()" class="btn-small">Logout</button>
-      </div>
-    </header>
-
-    <main class="content">
-      <h2>📋 Hasil Input Hafalan</h2>
-      <table id="tabelHafalan" class="data-table">
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>Nama Santri</th>
-            <th>Surah</th>
-            <th>Ayat</th>
-            <th>Tanggal</th>
-            <th>Keterangan</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-
-      <h3 style="margin-top:2rem;">🧾 Daftar Hadir</h3>
-      <p>Daftar hadir masih dalam pengembangan.</p>
-    </main>
-  </div>
-
-  <!-- Popup Form -->
-  <div id="popupForm" class="popup">
+  <!-- === POPUP INPUT DATA === -->
+  <div id="popupForm">
     <div class="popup-content">
-      <h3>Tambah / Update Hafalan</h3>
+      <h2>Input Hafalan Santri</h2>
       <form id="formInput">
-        <label>Nama Santri</label>
-        <input type="text" id="nama" required>
+        <input type="text" id="namaSantri" placeholder="Nama Santri" required />
+        <input type="text" id="surah" placeholder="Nama Surah" required />
+        <input type="text" id="ayat" placeholder="Ayat (contoh: 1-10)" required />
+        <input type="date" id="tanggal" required />
+        <textarea id="keterangan" rows="3" placeholder="Keterangan tambahan..."></textarea>
 
-        <label>Surah</label>
-        <input type="text" id="surah" required>
-
-        <label>Ayat</label>
-        <input type="text" id="ayat" required>
-
-        <label>Keterangan</label>
-        <input type="text" id="keterangan" required>
-
-        <div class="form-buttons">
-          <button type="submit" class="btn">Simpan</button>
-          <button type="button" id="btnClose" class="btn-cancel">Tutup</button>
+        <div class="popup-buttons">
+          <button type="submit" class="btn-save">💾 Simpan</button>
+          <button type="button" id="btnCancel" class="btn-cancel">Batal</button>
         </div>
       </form>
     </div>
