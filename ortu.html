@@ -69,24 +69,3 @@
 </body>
 <script src="script.js"></script>
 </html>
-// === Khusus halaman ORTU ===
-
-// Ambil nama santri yang login
-const userLogin = localStorage.getItem("userLogin");
-
-// Tampilkan sapaan di atas halaman
-if (userLogin) {
-  const namaEl = document.getElementById("namaSantri");
-  if (namaEl) {
-    const namaCapital =
-      userLogin.charAt(0).toUpperCase() + userLogin.slice(1);
-    namaEl.textContent = `🌿 Selamat datang, ${namaCapital}!`;
-  }
-}
-
-// Fungsi logout
-function logout() {
-  localStorage.removeItem("userLogin");
-  window.location.href = "index.html";
-}
-
