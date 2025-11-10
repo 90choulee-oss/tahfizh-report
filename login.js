@@ -1,19 +1,21 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const formLogin = document.getElementById("formLogin");
+function login() {
+  const username = document.getElementById("username").value.trim().toLowerCase();
+  const password = document.getElementById("password").value.trim();
 
-  formLogin.addEventListener("submit", (e) => {
-    e.preventDefault();
+  // Daftar contoh peserta tahfizh (bisa dikembangkan nanti)
+  const peserta = ["ahmad", "zahra", "faiz", "hanin", "salma"];
 
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value.trim();
-
-    // Contoh login sederhana
-    if (username === "guru" && password === "123") {
-      window.location.href = "guru.html";
-    } else if (username === "ortu" && password === "123") {
-      window.location.href = "ortu.html";
-    } else {
-      alert("Username atau password salah!");
-    }
-  });
-});
+  // Login guru
+  if (username === "guru" && password === "123") {
+    window.location.href = "guru.html";
+  }
+  // Login ortu (nama peserta)
+  else if (peserta.includes(username) && password === "123") {
+    // Simpan nama ke localStorage agar halaman ortu bisa tahu siapa yang login
+    localStorage.setItem("userLogin", username);
+    window.location.href = "ortu.html";
+  }
+  else {
+    alert("Username atau password salah!");
+  }
+}
