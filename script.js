@@ -1,79 +1,4 @@
-function login() {
-  const role = document.getElementById('role').value;
-
-  if (role === 'guru') {
-    window.location.href = 'guru.html';
-  } else {
-    window.location.href = 'ortu.html';
-  }
-}
-
-function logout() {
-  window.location.href = 'index.html';
-}
-// ====== FITUR INPUT / UPDATE DATA ======
-
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("hafalanForm");
-  const tableBody = document.querySelector("#dataTable tbody");
-  let data = JSON.parse(localStorage.getItem("hafalanData")) || [];
-
-  function renderTable() {
-    tableBody.innerHTML = "";
-    data.forEach((item, index) => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${item.nama}</td>
-        <td>${item.surah}</td>
-        <td>${item.ayat}</td>
-        <td>${item.progress}%</td>
-        <td>${item.keterangan}</td>
-        <td>
-          <button onclick="editData(${index})" class="btn-small">✏️</button>
-          <button onclick="hapusData(${index})" class="btn-small red">🗑️</button>
-        </td>
-      `;
-      tableBody.appendChild(row);
-    });
-  }
-
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const nama = document.getElementById("nama").value;
-    const surah = document.getElementById("surah").value;
-    const ayat = document.getElementById("ayat").value;
-    const progress = document.getElementById("progress").value;
-    const keterangan = document.getElementById("keterangan").value;
-
-    const existingIndex = data.findIndex(item => item.nama === nama && item.surah === surah);
-    if (existingIndex >= 0) {
-      data[existingIndex] = { nama, surah, ayat, progress, keterangan };
-    } else {
-      data.push({ nama, surah, ayat, progress, keterangan });
-    }
-
-    localStorage.setItem("hafalanData", JSON.stringify(data));
-    form.reset();
-    renderTable();
-  });
-
-  window.editData = (index) => {
-    const item = data[index];
-    document.getElementById("nama").value = item.nama;
-    document.getElementById("surah").value = item.surah;
-    document.getElementById("ayat").value = item.ayat;
-    document.getElementById("progress").value = item.progress;
-    document.getElementById("keterangan").value = item.keterangan;
-  };
-
-  window.hapusData = (index) => {
-    data.splice(index, 1);
-    localStorage.setItem("hafalanData", JSON.stringify(data));
-    renderTable();
-  };
-
-  renderTable();
-});
+// === Popup Control ===
 function openPopup() {
   document.getElementById('popupForm').style.display = 'flex';
 }
@@ -82,7 +7,88 @@ function closePopup() {
   document.getElementById('popupForm').style.display = 'none';
 }
 
+// === Logout ===
 function logout() {
   window.location.href = "index.html";
 }
 
+// === Ganti Section (Dasbor / Daftar Hadir) ===
+function showSection(id) {
+  const sections = document.querySelectorAll('.section');
+  sections.forEach(sec => sec.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+
+  const buttons = document.querySelectorAll('.menu-btn');
+  buttons.forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// === Fungsi Simpan ke LocalStorage ===
+function saveToLocalStorage(data) {
+  let records = JSON.parse(localStorage.getItem('hafalanData')) || [];
+  records.push(data);
+  localStorage.setItem('hafalanData', JSON.stringify(records));
+}
+
+// === Fungsi Load dari LocalStorage ===
+function loadFromLocalStorage() {
+  const records = JSON.parse(localStorage.getItem('hafalanData')) || [];
+  const tbody = document.querySelector('#dashboard tbody');
+  tbody.innerHTML = "";
+
+  records.forEach(item => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${item.nama}</td>
+      <td>${item.surah}</td>
+      <td>${item.ayat}</td>
+      <td>${item.tanggal}</td>
+      <td>${item.keterangan || '-'}</td>
+    `;
+    tbody.appendChild(row);
+  });
+}
+
+// === Event Form Submit ===
+document.getElementById('hafalanForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  // Ambil nilai dari form
+  const inputs = this.querySelectorAll('input, textarea');
+  const nama = inputs[0].value.trim();
+  const surah = inputs[1].value.trim();
+  const ayat = inputs[2].value.trim();
+  const tanggal = inputs[3].value;
+  const keterangan = inputs[4].value.trim();
+
+  if (!nama || !surah || !ayat || !tanggal) {
+    alert("Mohon lengkapi semua data sebelum menyimpan!");
+    return;
+  }
+
+  const newData = { nama, surah, ayat, tanggal, keterangan };
+
+  // Simpan ke LocalStorage
+  saveToLocalStorage(newData);
+
+  // Tampilkan di tabel
+  const tbody = document.querySelector('#dashboard tbody');
+  const newRow = document.createElement('tr');
+  newRow.innerHTML = `
+    <td>${nama}</td>
+    <td>${surah}</td>
+    <td>${ayat}</td>
+    <td>${tanggal}</td>
+    <td>${keterangan || '-'}</td>
+  `;
+  tbody.appendChild(newRow);
+
+  // Reset form dan tutup popup
+  this.reset();
+  closePopup();
+
+  alert("Data hafalan berhasil disimpan!");
+});
+
+// === Jalankan saat halaman dimuat ===
+window.addEventListener('load', loadFromLocalStorage);
