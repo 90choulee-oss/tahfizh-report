@@ -1,150 +1,125 @@
-// === GURU.JS === 
+// === GURU.JS ===
 document.addEventListener("DOMContentLoaded", () => {
   const userLogin = localStorage.getItem("userLogin");
   const role = localStorage.getItem("role");
 
-  // --- Cegah akses tanpa login ---
   if (!userLogin || role !== "guru") {
     window.location.href = "index.html";
     return;
   }
 
-  // --- Tampilkan nama guru di pojok atas ---
+  // Tampilkan nama guru di header
   const namaEl = document.getElementById("namaGuru");
   if (namaEl) {
     const namaCapital = userLogin.charAt(0).toUpperCase() + userLogin.slice(1);
     namaEl.textContent = `👋 Selamat datang, Ustadz/Ustadzah ${namaCapital}`;
   }
 
-  // --- Tampilkan data hafalan awal ---
-  tampilkanData();
-
-  // --- Event tombol menu di sidebar ---
-  const btnInput = document.getElementById("btnInput");
-  if (btnInput) btnInput.addEventListener("click", () => bukaPopup());
-
-  const btnCancel = document.getElementById("btnCancel");
-  if (btnCancel) btnCancel.addEventListener("click", () => tutupPopup());
-
-  const formInput = document.getElementById("formInput");
-  if (formInput) {
-    formInput.addEventListener("submit", (e) => {
-      e.preventDefault();
-      simpanData();
-    });
-  }
-
-  // --- Tombol Logout ---
-  const btnLogout = document.getElementById("btnLogout");
-  if (btnLogout) {
-    btnLogout.addEventListener("click", () => {
-      localStorage.removeItem("userLogin");
-      localStorage.removeItem("role");
-      window.location.href = "index.html";
-    });
-  }
+  tampilkanData(); // Tampilkan data saat halaman dibuka
 });
 
-// === Fungsi menampilkan data ===
+// Ambil data dari localStorage
+function getData() {
+  return JSON.parse(localStorage.getItem("dataHafalan") || "[]");
+}
+
+// Simpan data ke localStorage
+function setData(data) {
+  localStorage.setItem("dataHafalan", JSON.stringify(data));
+}
+
+// Tampilkan data ke tabel
 function tampilkanData() {
-  const dataTersimpan = JSON.parse(localStorage.getItem("dataHafalan")) || [];
-  const tbody = document.querySelector("#tabelHafalan tbody");
-  if (!tbody) return;
-  tbody.innerHTML = "";
+  const tabelBody = document.getElementById("tabelData");
+  const data = getData();
+  tabelBody.innerHTML = "";
 
-  if (dataTersimpan.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#999;">Belum ada data hafalan</td></tr>`;
-    return;
-  }
-
-  dataTersimpan.forEach((item, i) => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${i + 1}</td>
+  data.forEach((item, index) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${index + 1}</td>
       <td>${item.namaSantri}</td>
       <td>${item.surah}</td>
       <td>${item.ayat}</td>
       <td>${item.tanggal}</td>
-      <td>${item.keterangan}</td>
+      <td>${item.nilai}</td>
       <td>
-        <button class="btn-edit" onclick="editData(${i})">✏️</button>
-        <button class="btn-delete" onclick="hapusData(${i})">🗑️</button>
+        <button class="btn-edit" onclick="editData(${index})">✏️</button>
+        <button class="btn-delete" onclick="hapusData(${index})">🗑️</button>
       </td>
     `;
-    tbody.appendChild(tr);
+    tabelBody.appendChild(row);
   });
 }
 
-// === Fungsi buka/tutup popup form ===
-function bukaPopup() {
-  const popup = document.getElementById("popupForm");
-  if (popup) popup.classList.add("show");
-}
-
-function tutupPopup() {
-  const popup = document.getElementById("popupForm");
-  if (popup) popup.classList.remove("show");
-  document.getElementById("formInput").reset();
-}
-
-// === Simpan Data ===
+// Simpan data baru atau update data lama
 function simpanData() {
-  const namaSantri = document.getElementById("namaSantri").value.trim();
+  const nama = document.getElementById("namaSantri").value.trim();
   const surah = document.getElementById("surah").value.trim();
   const ayat = document.getElementById("ayat").value.trim();
   const tanggal = document.getElementById("tanggal").value;
-  const keterangan = document.getElementById("keterangan").value.trim();
+  const nilai = document.getElementById("nilai").value.trim();
 
-  if (!namaSantri || !surah || !ayat || !tanggal) {
-    alert("Mohon lengkapi semua data!");
+  if (!nama || !surah || !ayat || !tanggal || !nilai) {
+    alert("Semua kolom harus diisi!");
     return;
   }
 
-  const dataBaru = { namaSantri, surah, ayat, tanggal, keterangan };
-  const dataTersimpan = JSON.parse(localStorage.getItem("dataHafalan")) || [];
-  dataTersimpan.push(dataBaru);
-  localStorage.setItem("dataHafalan", JSON.stringify(dataTersimpan));
+  let data = getData();
+  const editIndex = localStorage.getItem("editIndex");
 
+  if (editIndex !== null) {
+    data[editIndex] = { namaSantri: nama, surah, ayat, tanggal, nilai };
+    localStorage.removeItem("editIndex");
+  } else {
+    data.push({ namaSantri: nama, surah, ayat, tanggal, nilai });
+  }
+
+  setData(data);
   tampilkanData();
-  tutupPopup();
+  closePopup();
+  clearForm();
 }
 
-// === Edit Data ===
-function editData(index) {
-  const dataTersimpan = JSON.parse(localStorage.getItem("dataHafalan")) || [];
-  const data = dataTersimpan[index];
-  if (!data) return;
+// Hapus data
+function hapusData(index) {
+  if (confirm("Yakin ingin menghapus data ini?")) {
+    let data = getData();
+    data.splice(index, 1);
+    setData(data);
+    tampilkanData();
+  }
+}
 
-  bukaPopup();
+// Edit data
+function editData(index) {
+  const data = getData()[index];
   document.getElementById("namaSantri").value = data.namaSantri;
   document.getElementById("surah").value = data.surah;
   document.getElementById("ayat").value = data.ayat;
   document.getElementById("tanggal").value = data.tanggal;
-  document.getElementById("keterangan").value = data.keterangan;
-
-  // Ganti aksi tombol simpan
-  const formInput = document.getElementById("formInput");
-  formInput.onsubmit = function (e) {
-    e.preventDefault();
-    dataTersimpan[index] = {
-      namaSantri: document.getElementById("namaSantri").value.trim(),
-      surah: document.getElementById("surah").value.trim(),
-      ayat: document.getElementById("ayat").value.trim(),
-      tanggal: document.getElementById("tanggal").value,
-      keterangan: document.getElementById("keterangan").value.trim(),
-    };
-    localStorage.setItem("dataHafalan", JSON.stringify(dataTersimpan));
-    tampilkanData();
-    tutupPopup();
-    formInput.onsubmit = (ev) => { ev.preventDefault(); simpanData(); }; // Kembalikan default
-  };
+  document.getElementById("nilai").value = data.nilai;
+  localStorage.setItem("editIndex", index);
+  document.getElementById("popupForm").style.display = "flex";
 }
 
-// === Hapus Data ===
-function hapusData(index) {
-  if (!confirm("Yakin ingin menghapus data ini?")) return;
-  const dataTersimpan = JSON.parse(localStorage.getItem("dataHafalan")) || [];
-  dataTersimpan.splice(index, 1);
-  localStorage.setItem("dataHafalan", JSON.stringify(dataTersimpan));
-  tampilkanData();
+// Bersihkan form
+function clearForm() {
+  document.getElementById("namaSantri").value = "";
+  document.getElementById("surah").value = "";
+  document.getElementById("ayat").value = "";
+  document.getElementById("tanggal").value = "";
+  document.getElementById("nilai").value = "";
 }
+
+// Pencarian data santri
+document.addEventListener("input", (e) => {
+  if (e.target.id === "search") {
+    const keyword = e.target.value.toLowerCase();
+    const rows = document.querySelectorAll("#tabelData tr");
+    rows.forEach(row => {
+      const nama = row.children[1].textContent.toLowerCase();
+      row.style.display = nama.includes(keyword) ? "" : "none";
+    });
+  }
+});
