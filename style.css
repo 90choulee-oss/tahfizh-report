@@ -284,6 +284,47 @@ h1, h2, h3 {
     flex-direction: column;
     gap: 10px;
   }
+  /* === Sidebar Toggle Styling === */
+.sidebar.hidden {
+  transform: translateX(-240px);
+  transition: 0.3s ease;
+}
+.main-content.expanded {
+  margin-left: 0;
+  transition: 0.3s ease;
+}
+
+.sidebar {
+  transition: transform 0.3s ease;
+}
+
+/* Warna hijau & emas khas */
+:root {
+  --hijau: #1e8b4c;
+  --emas: #d4af37;
+}
+
+.sidebar {
+  background-color: var(--hijau);
+}
+
+.menu-btn.active, .menu-btn:hover {
+  background-color: var(--emas);
+  color: white;
+}
+
+.btn-small {
+  background-color: var(--emas);
+}
+
+.btn-primary {
+  background-color: var(--hijau);
+}
+
+.btn-primary:hover {
+  background-color: #166b3b;
+}
+
 
   .search-box {
     width: 100%;
